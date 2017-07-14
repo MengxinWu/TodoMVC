@@ -1,22 +1,24 @@
-// global Backbone var
+// bind Model: Todo to the global variable: app
 var app = app || {};
 
 (function() {
 	// use strict mode
-	"use strict";
+	'use strict';
 
-	// create Todo model: "title", "order", "completed"  
+	// define Backbone Model: Todo  
 	app.Todo = Backbone.Model.extend({
-		// set the default attr. for the todo
+
+		// default attributes for the Model: Todo
 		defaults: {
-			title:      "",
+			title:      '',
 			completed:  false
 		},
 
-		// toggle the completed state of this model
+		// toggle the Model attribute: 'completed'
+		// more about Model.save() to see the Backbone.js website
 		toggle: function() {
 			this.save({ 
-				completed: !this.get("completed") 
+				completed: !this.get('completed') 
 			});	
 		}
 	});

@@ -1,33 +1,35 @@
-// global Backbone var
+// bind View: TodoView to global variable: app
 var app = app || {};
 
 (function () {
 	// use strict mode
-	"use strict";
+	'use strict';
 
-	// create TodoView for a todo item
+	// define Backbone View: TodoView for each Todo item
 	app.TodoView = Backbone.View.extend({
-		tagName: "li",
 
-		// cache the template for a todo item
-		template: _.template($("#item-template").html()),
+		// create DOM element: li
+		tagName: 'li',
 
-		//  DOM events
+		// cache the template for each Todo item
+		template: _.template($('#item-template').html()),
+
+		// specify DOM events
 		events: {
-			"dbclick label":   "edit",
-			"keypress .edit":  "updateOnEnter",
-			"blur .edit":      "close",
-			"click .toggle":   "toggleCompleted",
-			"click .destroy":  "clear",
-			"keydown .edit":   "revertOnEscape"
+			'click .toggle':   'toggleCompleted',
+			'dbclick label':   'edit',
+			'click .destroy':  'clear',
+			'keypress .edit':  'updateOnEnter',
+			'keydown .edit':   'revertOnEscape',
+			'blur .edit':      'close'
 		},
 
-		// TodoView listen for changes to its model Todo
+		// TodoView listen for changes to Todo item
 		initialize: function() {
 			this.listenTo(this.model, "change", this.render);
-			this.listenTo(this.model, "destroy", this.remove);
+			this.listenTo(this.model, 'destroy', this.remove);
 			
-			// ??? visible event from where ???
+			// define custom event 'visible'
 			this.listenTo(this.model, "visible", this.toggleVisible);
 		},
 
@@ -39,28 +41,37 @@ var app = app || {};
 			}
 
 			this.$el.html(this.template(this.model.toJSON()));
-			this.$el.toggleClass("completed", this.model.get("completed"));
-			this.toggleVisible();
 
-			this.$input = this.$(".edit");
+			// jQuery toggleClass() to add or remove class style
+			this.$el.toggleClass('completed', this.model.get('completed'));
+			this.toggleVisible();
+			this.$input = this.$('.edit');
 			return this;
 		},
 
-		toggleVisible: function() {
-			this.$el.toggleClass("hidden", this.isHidden());
+
+		// toggle the completed state of Todo item
+		toggleCompleted: function() {
+			this.model.toggle();
 		},
 
-		isHidden: function() {
-			return this.model.get("completed") ?
+		// toggle visivle of Todo item when select: all, active, completed
+		toggleVisible: function() {
 
-			// ??? app.TodoFilter ???
-				app.TodoFilter === "active" :
-				app.TodoFilter === "completed";
+			// jQuery toggleClass() to add or remove class style
+			this.$el.toggleClass('hidden', this.isHidden());
+		},
+
+		// judge the TodoFilter(from router.js) to decide the visible state of Todo item
+		isHidden: function() {
+			return this.model.get('completed') ?
+				app.TodoFilter === 'active' :
+				app.TodoFilter === 'completed';
 		},
 
 		// switch the view into editing mode
 		edit: function() {
-			this.$el.addClass("editing");
+			this.$el.addClass('editing');
 			this.$input.focus();
 		},
 
@@ -68,13 +79,13 @@ var app = app || {};
 		close: function() {
 			var trimmedValue = this.$input.val().trim();
 			
-			if( value ) {
+			if(value) {
 				this.model.save({ title: trimmedValue });
 			} else {
 				this.clear();
 			}
 
-			this.$el.removeClass("editing");
+			this.$el.removeClass('editing');
 		},
 
 		// enter and save the update
@@ -82,11 +93,6 @@ var app = app || {};
 			if(e.which === ENTER_KEY) {
 				this.close();
 			}
-		},
-
-		// toggle the completed state of the Todo item
-		toggleCompleted: function() {
-			this.model.toggle();
 		},
 
 		// remove the Todo item
@@ -97,8 +103,8 @@ var app = app || {};
 		// leave editing mode without saving the update
 		revertOnEscape: function(e) {
 			if(e.which === ESC_KEY) {
-				this.$el.removeClass("editing");
-				this.$input.val(this.model.get("title"));
+				this.$el.removeClass('editing');
+				this.$input.val(this.model.get('editing'));
 			}
 		}
 	});
