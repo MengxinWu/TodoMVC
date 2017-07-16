@@ -17,7 +17,7 @@ var app = app || {};
 		// specify DOM events
 		events: {
 			'click .toggle':   'toggleCompleted',
-			'dbclick label':   'edit',
+			'dblclick label':   'edit',
 			'click .destroy':  'clear',
 			'keypress .edit':  'updateOnEnter',
 			'keydown .edit':   'revertOnEscape',
@@ -79,7 +79,7 @@ var app = app || {};
 		close: function() {
 			var trimmedValue = this.$input.val().trim();
 			
-			if(value) {
+			if(trimmedValue) {
 				this.model.save({ title: trimmedValue });
 			} else {
 				this.clear();

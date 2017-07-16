@@ -5,3 +5,4 @@
 # Update log:
 # 2017/7/8:  First commit, completed most work about TodoMVC.
 # 2017/7/14: Second commit, completed all work and added detailed comments.
+# 2017/7/16: This commit, fixed some bugs and added some more comments.
